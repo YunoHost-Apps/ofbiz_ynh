@@ -1,7 +1,7 @@
-SOURCE_URL=url of app's source
-SOURCE_SUM=sha256 checksum
+SOURCE_URL=https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.05.zip
+SOURCE_SUM=4c51751779f29af5c87fb42b27ccc874d2fdc668f5a4b36f3eb20b0220909aa1
 SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=tar.gz
+SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
 SOURCE_FILENAME=
 SOURCE_EXTRACT=true
