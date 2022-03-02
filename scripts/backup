@@ -61,7 +61,9 @@ ynh_backup --src_path="/etc/systemd/system/$app.service"
 #=================================================
 ynh_print_info --message="Backing up the PostgreSQL database..."
 
-ynh_psql_dump_db --database="$db_name" > db.sql
+ynh_psql_dump_db --database="${db_name}" > db.sql
+ynh_psql_dump_db --database="${db_name}olap" > dbolap.sql
+ynh_psql_dump_db --database="${db_name}tenant" > dbtenant.sql
 
 #=================================================
 # END OF SCRIPT

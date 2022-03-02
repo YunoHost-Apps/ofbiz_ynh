@@ -87,8 +87,13 @@ ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_script_progression --message="Restoring the PostgreSQL database..."
 
 ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
-ynh_psql_execute_file_as_root --file="./db.sql" --database=$db_name
+ynh_psql_create_user "$db_user" "$db_pwd"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_file_as_root --file="./db.sql" --database=${db_name}
+ynh_psql_execute_file_as_root --file="./dbolap.sql" --database=${db_name}olap
+ynh_psql_execute_file_as_root --file="./dbtenant.sql" --database=${db_name}tenant
 
 #=================================================
 # RESTORE SYSTEMD
