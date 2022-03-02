@@ -23,7 +23,10 @@ Apache-OFBiz ERP
 
 ## Disclaimers / important information
 
-The default administrative account is username: "admin", password: "ofbiz".
+* ofbiz require full domain path to be installed. Eg. ofbiz.domain.tld
+* to login go to https://ofbiz.domain.tld/catalog
+* The default administrative account is username: "admin", password: "ofbiz".
+
 ## Documentation and resources
 
 * Official app website: https://ofbiz.apache.org
