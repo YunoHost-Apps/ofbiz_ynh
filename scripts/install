@@ -144,7 +144,7 @@ cp -f ../conf/build.gradle "$final_path/build.gradle"
 
 pushd "$final_path"
 	ynh_exec_as $app ./gradle/init-gradle-wrapper.sh
-	ynh_exec_as $app ./gradlew cleanAll "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
+	ynh_exec_as $app ./gradlew cleanAll loadAll 2>&1
 popd
 
 #=================================================
