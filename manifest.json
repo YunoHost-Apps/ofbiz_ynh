@@ -33,12 +33,6 @@
                 "type": "domain"
             },
             {
-                "name": "path",
-                "type": "path",
-                "example": "/ofbiz",
-                "default": "/ofbiz"
-            },
-            {
                 "name": "admin",
                 "type": "user"
             }
