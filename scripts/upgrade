@@ -129,6 +129,9 @@ then
 	ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localderbyolap\"" --replace_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localpostgresolap\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
 	ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localderbytenant\"" --replace_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localpostgrestenant\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
 
+	ynh_replace_string --match_string="security.ldap.enable=false" --replace_string="security.ldap.enable=true" --target_file="$final_path/framework/security/config/security.properties"
+	ynh_replace_string --match_string="ldap.dn.template=cn=%u,ou=system" --replace_string="ldap.dn.template=uid=%u,ou=users,dc=yunohost,dc=org" --target_file="$final_path/framework/security/config/jndiLdap.properties"
+
 	cp -f ../conf/build.gradle "$final_path/build.gradle"
 fi
 
