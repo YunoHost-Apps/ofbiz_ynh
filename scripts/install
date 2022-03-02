@@ -50,6 +50,17 @@ ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin
 
 #=================================================
+# STANDARD MODIFICATIONS
+#=================================================
+# FIND AND OPEN A PORT
+#=================================================
+ynh_script_progression --message="Finding an available port..."
+
+# Find an available port
+port=$(ynh_find_port --port=8095)
+ynh_app_setting_set --app=$app --key=port --value=$port
+
+#=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..."
@@ -63,6 +74,22 @@ ynh_script_progression --message="Configuring system user..."
 
 # Create a system user
 ynh_system_user_create --username=$app --home_dir="$final_path"
+
+#=================================================
+# CREATE A POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression --message="Creating a PostgreSQL database..."
+
+db_name=$(ynh_sanitize_dbid --db_name=$app)
+db_user=$db_name
+db_pwd=$(ynh_string_random --length=30)
+ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
+ynh_psql_test_if_first_run
+ynh_psql_create_user "$db_user" "$db_pwd"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -92,21 +119,33 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Building app..."
 
+ynh_replace_string --match_string="port.https=" --replace_string="port.https=443" --target_file="$final_path/framework/webapp/config/url.properties"
+ynh_replace_string --match_string="force.https.host=" --replace_string="force.https.host=$domain" --target_file="$final_path/framework/webapp/config/url.properties"
+ynh_replace_string --match_string="port.http=8080" --replace_string="port.http=80" --target_file="$final_path/framework/webapp/config/url.properties"
+ynh_replace_string --match_string="force.http.host=" --replace_string="force.http.host=$domain" --target_file="$final_path/framework/webapp/config/url.properties"
+
+ynh_replace_string --match_string="host-headers-allowed=.*" --replace_string="host-headers-allowed=$domain" --target_file="$final_path/framework/security/config/security.properties"
+
+ynh_replace_string --match_string="8443" --replace_string="$port" --target_file="$final_path/framework/catalina/ofbiz-component.xml"
+
+ynh_replace_string --match_string="jdbc:postgresql://127.0.0.1/ofbiz" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="jdbc:postgresql://127.0.0.1/ofbizolap" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}olap" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="jdbc:postgresql://127.0.0.1/ofbiztenant" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}tenant" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="jdbc-username=\"ofbiz\"" --replace_string="jdbc-username=\"$db_user\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="jdbc-password=\"ofbiz\"" --replace_string="jdbc-password=\"$db_pwd\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localderby\"" --replace_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localpostgres\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localderbyolap\"" --replace_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localpostgresolap\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
+ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localderbytenant\"" --replace_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localpostgrestenant\"" --target_file="$final_path/framework/entity/config/entityengine.xml"
+
+ynh_replace_string --match_string="security.ldap.enable=false" --replace_string="security.ldap.enable=true" --target_file="$final_path/framework/security/config/security.properties"
+ynh_replace_string --match_string="ldap.dn.template=cn=%u,ou=system" --replace_string="ldap.dn.template=uid=%u,ou=users,dc=yunohost,dc=org" --target_file="$final_path/framework/security/config/jndiLdap.properties"
+
+cp -f ../conf/build.gradle "$final_path/build.gradle"
+
 pushd "$final_path"
-	./gradle/init-gradle-wrapper.sh
-	./gradlew cleanAll "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
+	ynh_exec_as $app ./gradle/init-gradle-wrapper.sh
+	ynh_exec_as $app ./gradlew cleanAll "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
 popd
-
-
-port.https= port.https=443
-force.https.host= force.https.host=test31.yh.yalh.net
-port.http=8080 port.http=80
-force.http.host= force.http.host=test31.yh.yalh.net
-
-$final_path/framework/webapp/config/url.properties
-
-host-headers-allowed=.* host-headers-allowed=test31.yh.yalh.net
-framework/security/config/security.properties 
 
 #=================================================
 # SETUP SYSTEMD
@@ -130,8 +169,11 @@ yunohost service add $app --log="/var/log/$app/$app.log"
 #=================================================
 ynh_script_progression --message="Starting a systemd service..."
 
+mkdir -p /var/log/$app
+chown -R $app:$app "/var/log/$app"
+
 # Start a systemd service
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log" --line_match="is started and ready"
 
 #=================================================
 # SETUP SSOWAT
