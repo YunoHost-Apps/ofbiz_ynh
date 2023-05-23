@@ -1,5 +1,5 @@
-SOURCE_URL=https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.05.zip
-SOURCE_SUM=4c51751779f29af5c87fb42b27ccc874d2fdc668f5a4b36f3eb20b0220909aa1
+SOURCE_URL=https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.07.zip
+SOURCE_SUM=b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
