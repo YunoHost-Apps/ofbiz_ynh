@@ -16,15 +16,9 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Overview
 
-Apache-OFBiz ERP
+Apache OFBiz is a suite of business applications flexible enough to be used across any industry. A common architecture allows developers to easily extend or enhance it to create custom features. 
 
 **Shipped version:** 18.12.07~ynh1
-## Disclaimers / important information
-
-* ofbiz require full domain path to be installed. Eg. ofbiz.domain.tld
-* to login go to https://ofbiz.domain.tld/catalog
-* The default administrative account is username: "admin", password: "ofbiz".
-
 ## Documentation and resources
 
 * Official app website: <https://ofbiz.apache.org>
