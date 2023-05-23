@@ -5,7 +5,7 @@
     "description": {
         "en": "Apache-OFBiz ERP"
     },
-    "version": "18.12.05~ynh1",
+    "version": "18.12.07~ynh1",
     "url": "https://ofbiz.apache.org",
     "upstream": {
         "license": "Apache-2.0",
