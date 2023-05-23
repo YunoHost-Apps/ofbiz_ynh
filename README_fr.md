@@ -16,15 +16,9 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 
 ## Vue d’ensemble
 
-
+Apache OFBiz is a suite of business applications flexible enough to be used across any industry. A common architecture allows developers to easily extend or enhance it to create custom features. 
 
 **Version incluse :** 18.12.07~ynh1
-## Avertissements / informations importantes
-
-* ofbiz require full domain path to be installed. Eg. ofbiz.domain.tld
-* to login go to https://ofbiz.domain.tld/catalog
-* The default administrative account is username: "admin", password: "ofbiz".
-
 ## Documentations et ressources
 
 * Site officiel de l’app : <https://ofbiz.apache.org>
