@@ -10,14 +10,6 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# CREATE DEDICATED USER
-#=================================================
-#REMOVEME? ynh_script_progression --message="Configuring system user..."
-
-# Create a system user
-#REMOVEME? ynh_system_user_create --username=$app --home_dir="$install_dir"
-
-#=================================================
 # CREATE A POSTGRESQL DATABASE
 #=================================================
 ynh_script_progression --message="Creating a PostgreSQL database..."
