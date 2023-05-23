@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="openjdk-11-jdk postgresql"
+#REMOVEME? pkg_dependencies="openjdk-11-jdk postgresql"
 
 #=================================================
 # PERSONAL HELPERS
