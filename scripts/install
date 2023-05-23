@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Creating a PostgreSQL database..."
 
-ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+#ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
 ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
 ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
 
