@@ -35,12 +35,16 @@ chown -R $app:www-data "$install_dir"
 ynh_script_progression --message="Restoring the PostgreSQL database..."
 
 #ynh_psql_create_user "$db_user" "$db_pwd"
-ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
-ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
-ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
-ynh_psql_execute_file_as_root --file="./db.sql" --database=${db_name}
-ynh_psql_execute_file_as_root --file="./dbolap.sql" --database=${db_name}olap
-ynh_psql_execute_file_as_root --file="./dbtenant.sql" --database=${db_name}tenant
+#ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+#ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+#ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+
+ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./dbolap.sql
+ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./dbtenant.sql
+
+#ynh_psql_execute_file_as_root --file="./dbolap.sql" --database=${db_name}olap
+#ynh_psql_execute_file_as_root --file="./dbtenant.sql" --database=${db_name}tenant
 
 #=================================================
 # RESTORE SYSTEMD
