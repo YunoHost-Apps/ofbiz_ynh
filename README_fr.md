@@ -30,7 +30,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 * Site officiel de l’app : <https://ofbiz.apache.org>
 * Documentation officielle utilisateur : <https://cwiki.apache.org/confluence/display/OFBIZ/Documentation>
 * Dépôt de code officiel de l’app : <https://github.com/apache/ofbiz-framework>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_ofbiz>
+* YunoHost Store: <https://apps.yunohost.org/app/ofbiz>
 * Signaler un bug : <https://github.com/YunoHost-Apps/ofbiz_ynh/issues>
 
 ## Informations pour les développeurs

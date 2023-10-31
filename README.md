@@ -30,7 +30,7 @@ Apache-OFBiz ERP
 * Official app website: <https://ofbiz.apache.org>
 * Official user documentation: <https://cwiki.apache.org/confluence/display/OFBIZ/Documentation>
 * Upstream app code repository: <https://github.com/apache/ofbiz-framework>
-* YunoHost documentation for this app: <https://yunohost.org/app_ofbiz>
+* YunoHost Store: <https://apps.yunohost.org/app/ofbiz>
 * Report a bug: <https://github.com/YunoHost-Apps/ofbiz_ynh/issues>
 
 ## Developer info
