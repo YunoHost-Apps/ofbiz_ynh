@@ -1,14 +1,14 @@
 [Unit]
-Description=OFBiz Service
+Description=OFBiz
 After=network.target
 
 [Service]
 Type=simple
 User=__APP__
 Group=__APP__
-WorkingDirectory=__FINALPATH__/
-ExecStart=__FINALPATH__/gradlew ofbiz
-ExecStop=__FINALPATH__/gradlew "ofbiz --shutdown"
+WorkingDirectory=__INSTALL_DIR__/
+ExecStart=__INSTALL_DIR__/gradlew ofbiz
+ExecStop=__INSTALL_DIR__/gradlew "ofbiz --shutdown"
 StandardOutput=append:/var/log/__APP__/__APP__.log
 StandardError=inherit
 

@@ -1,0 +1,56 @@
+packaging_format = 2
+
+id = "ofbiz"
+name = "OFBiz"
+description.en = "Apache-OFBiz ERP"
+
+version = "18.12.07~ynh1"
+
+maintainers = ["JulienNICOLAS"]
+
+[upstream]
+license = "Apache-2.0"
+website = "https://ofbiz.apache.org"
+userdoc = "https://cwiki.apache.org/confluence/display/OFBIZ/Documentation"
+code = "https://github.com/apache/ofbiz-framework"
+
+[integration]
+yunohost = ">= 11.2"
+architectures = "all"
+multi_instance = false
+
+ldap = false
+
+sso = false
+
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.admin]
+    type = "user"
+
+[resources]
+        [resources.sources.main]
+        url = "https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.07.zip"
+        sha256 = "b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de"
+
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.ports]
+
+    [resources.permissions]
+    main.url = "/"
+
+    [resources.apt]
+    packages = "openjdk-11-jdk, postgresql"
+
+    [resources.database]
+    type = "postgresql"
