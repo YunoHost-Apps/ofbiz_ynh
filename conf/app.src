@@ -1,4 +1,4 @@
-SOURCE_URL=https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.07.zip
+SOURCE_URL=https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.07.zip
 SOURCE_SUM=b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
