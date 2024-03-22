@@ -34,8 +34,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://www.apache.org/dyn/closer.lua/ofbiz/apache-ofbiz-18.12.07.zip"
-    sha256 = "b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de"
+    url = "https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.12.zip"
+    sha256 = "8fece2b0febf54764f707c61c3ec601e7521c6d3cf85d9f414b9ff07d18e9a50"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
