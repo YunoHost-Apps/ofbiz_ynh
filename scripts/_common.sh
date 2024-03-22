@@ -8,6 +8,12 @@
 # PERSONAL HELPERS
 #=================================================
 
+_ci_fix_nginx() {
+    if [ "${PACKAGE_CHECK_EXEC:-0}" -eq 1 ]; then
+        echo 'rewrite ^/$ /catalog/;' >> "/etc/nginx/conf.d/${domain}.d/$app.conf"
+    fi
+}
+
 #=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
