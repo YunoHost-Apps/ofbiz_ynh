@@ -1,10 +1,12 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
 packaging_format = 2
 
 id = "ofbiz"
 name = "OFBiz"
 description.en = "Apache-OFBiz ERP"
 
-version = "18.12.07~ynh1"
+version = "18.12.07~ynh2"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -20,7 +22,6 @@ architectures = "all"
 multi_instance = false
 
 ldap = false
-
 sso = false
 
 disk = "50M"
@@ -35,10 +36,12 @@ ram.runtime = "50M"
     type = "user"
 
 [resources]
-        [resources.sources.main]
-        url = "https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.07.zip"
-        sha256 = "b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de"
+    [resources.sources.main]
+    url = "https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.07.zip"
+    sha256 = "b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de"
 
+    autoupdate.strategy = "latest_github_tag"
+    autoupdate.version_regex = "^release(.*)$"
 
     [resources.system_user]
 
@@ -50,7 +53,7 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "openjdk-11-jdk, postgresql"
+    packages = ["openjdk-11-jdk", "postgresql"]
 
     [resources.database]
     type = "postgresql"
