@@ -32,9 +32,6 @@ ram.runtime = "50M"
     [install.domain]
     type = "domain"
 
-    [install.admin]
-    type = "user"
-
 [resources]
     [resources.sources.main]
     url = "https://dlcdn.apache.org/ofbiz/apache-ofbiz-18.12.07.zip"
@@ -51,6 +48,7 @@ ram.runtime = "50M"
 
     [resources.permissions]
     main.url = "/"
+    main.allowed = "admins"
 
     [resources.apt]
     packages = ["openjdk-11-jdk", "postgresql"]
