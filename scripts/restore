@@ -22,7 +22,13 @@ chown -R "$app:www-data" "$install_dir"
 #=================================================
 ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=1
 
-ynh_psql_connect_as --user="$db_user" --password="$db_pwd" --database="$db_name" < ./db.sql
+# ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name} WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+
+ynh_psql_connect_as --user="$db_user" --password="$db_pwd" --database="${db_name}" < ./db.sql
+ynh_psql_connect_as --user="$db_user" --password="$db_pwd" --database="${db_name}olap" < ./dbolap.sql
+ynh_psql_connect_as --user="$db_user" --password="$db_pwd" --database="${db_name}tenant" < ./dbtenant.sql
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS

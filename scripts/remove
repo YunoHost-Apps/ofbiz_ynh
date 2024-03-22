@@ -28,6 +28,10 @@ ynh_remove_logrotate
 # Remove the log files
 ynh_secure_remove --file="/var/log/$app"
 
+# Remove additional databases
+ynh_psql_drop_db "${db_name}tenant"
+ynh_psql_drop_db "${db_name}olap"
+
 #=================================================
 # END OF SCRIPT
 #=================================================
