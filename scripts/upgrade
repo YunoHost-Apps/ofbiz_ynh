@@ -69,8 +69,8 @@ ynh_add_config --template="build.gradle" --destination="$install_dir/build.gradl
 ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
 # Create a dedicated NGINX config
-ynh_add_nginx_config
 _ci_fix_nginx
+ynh_add_nginx_config
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
