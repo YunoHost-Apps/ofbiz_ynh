@@ -16,6 +16,16 @@ ynh_script_progression --message="Stopping $app's systemd service..."
 ynh_systemd_action --service_name="$app" --action="stop" --log_path="systemd" --line_match="Stopped OFBiz Service"
 
 #=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+
+# Remove legacy admin key
+if [ -n "${admin:-}" ]; then
+    ynh_app_setting_delete --app="$app" --key=admin
+fi
+
+#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Upgrading source files..."
