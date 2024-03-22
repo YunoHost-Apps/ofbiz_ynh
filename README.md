@@ -16,22 +16,16 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Overview
 
-Apache-OFBiz ERP
+Apache OFBiz is an open source product for the automation of enterprise processes. It includes framework components and business applications for ERP, CRM, E-Business/E-Commerce, Supply Chain Management and Manufacturing Resource Planning. OFBiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions. 
 
-**Shipped version:** 18.12.07~ynh1
-## Disclaimers / important information
-
-* ofbiz require full domain path to be installed. Eg. ofbiz.domain.tld
-* to login go to https://ofbiz.domain.tld/catalog
-* The default administrative account is username: "admin", password: "ofbiz".
-
+**Shipped version:** 18.12.07~ynh2
 ## Documentation and resources
 
-* Official app website: <https://ofbiz.apache.org>
-* Official user documentation: <https://cwiki.apache.org/confluence/display/OFBIZ/Documentation>
-* Upstream app code repository: <https://github.com/apache/ofbiz-framework>
-* YunoHost Store: <https://apps.yunohost.org/app/ofbiz>
-* Report a bug: <https://github.com/YunoHost-Apps/ofbiz_ynh/issues>
+- Official app website: <https://ofbiz.apache.org>
+- Official user documentation: <https://cwiki.apache.org/confluence/display/OFBIZ/Documentation>
+- Upstream app code repository: <https://github.com/apache/ofbiz-framework>
+- YunoHost Store: <https://apps.yunohost.org/app/ofbiz>
+- Report a bug: <https://github.com/YunoHost-Apps/ofbiz_ynh/issues>
 
 ## Developer info
 
@@ -39,7 +33,7 @@ Please send your pull request to the [testing branch](https://github.com/YunoHos
 
 To try the testing branch, please proceed like that.
 
-``` bash
+```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/ofbiz_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade ofbiz -u https://github.com/YunoHost-Apps/ofbiz_ynh/tree/testing --debug
