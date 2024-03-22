@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -22,16 +20,23 @@ ynh_print_info --message="Declaring files to be backed up..."
 ynh_backup --src_path="$install_dir"
 
 #=================================================
-# BACKUP THE NGINX CONFIGURATION
+# BACKUP THE SYSTEM CONFIGURATION
 #=================================================
 
+# Backup the nginx configuration
 ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
+# Backup the systemd service unit
+ynh_backup --src_path="/etc/systemd/system/$app.service"
+
+# Backup the logrotate configuration
+ynh_backup --src_path="/etc/logrotate.d/$app"
+
 #=================================================
-# BACKUP SYSTEMD
+# BACKUP VARIOUS FILES
 #=================================================
 
-ynh_backup --src_path="/etc/systemd/system/$app.service"
+ynh_backup --src_path="/var/log/$app/"
 
 #=================================================
 # BACKUP THE POSTGRESQL DATABASE

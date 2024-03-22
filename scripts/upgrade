@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -11,97 +9,70 @@ source ynh_package_version
 source /usr/share/yunohost/helpers
 
 #=================================================
-# CHECK VERSION
-#=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..."
+ynh_script_progression --message="Stopping $app's systemd service..."
 
-ynh_systemd_action --service_name=$app --action="stop" --log_path="systemd" --line_match="Stopped OFBiz Service"
+ynh_systemd_action --service_name="$app" --action="stop" --log_path="systemd" --line_match="Stopped OFBiz Service"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Upgrading source files..."
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..."
-
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir"
-fi
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source --dest_dir="$install_dir" --full_replace=1
 
 chmod -R o-rwx "$install_dir"
-chown -R $app:www-data "$install_dir"
+chown -R "$app:www-data" "$install_dir"
 
 #=================================================
-# NGINX CONFIGURATION
+# BUILD APP
 #=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..."
+ynh_script_progression --message="Building app..."
+
+ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="port.https=" --replace_string="port.https=443"
+ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="force.https.host=" --replace_string="force.https.host=$domain"
+ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="port.http=8080" --replace_string="port.http=80"
+ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="force.http.host=" --replace_string="force.http.host=$domain"
+
+ynh_replace_string --target_file="$install_dir/framework/catalina/ofbiz-component.xml" --match_string="8443" --replace_string="$port"
+
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc:postgresql://127.0.0.1/ofbiz" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}"
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc:postgresql://127.0.0.1/ofbizolap" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}olap"
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc:postgresql://127.0.0.1/ofbiztenant" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}tenant"
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc-username=\"ofbiz\"" --replace_string="jdbc-username=\"$db_user\""
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc-password=\"ofbiz\"" --replace_string="jdbc-password=\"$db_pwd\""
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localderby\"" --replace_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localpostgres\""
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localderbyolap\"" --replace_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localpostgresolap\""
+ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localderbytenant\"" --replace_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localpostgrestenant\""
+
+ynh_replace_string --target_file="$install_dir/framework/security/config/security.properties" --match_string="host-headers-allowed=.*" --replace_string="host-headers-allowed=$domain"
+ynh_replace_string --target_file="$install_dir/framework/security/config/security.properties" --match_string="security.ldap.enable=false" --replace_string="security.ldap.enable=true"
+ynh_replace_string --target_file="$install_dir/framework/security/config/jndiLdap.properties" --match_string="ldap.dn.template=cn=%u,ou=system" --replace_string="ldap.dn.template=uid=%u,ou=users,dc=yunohost,dc=org"
+
+ynh_add_config --template="build.gradle" --destination="$install_dir/build.gradle"
+
+#=================================================
+# REAPPLY SYSTEM CONFIGURATIONS
+#=================================================
+ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
 
-#=================================================
-# SPECIFIC UPGRADE
-#=================================================
-# BUILD APP
-#=================================================
-
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Building app..."
-
-	ynh_replace_string --match_string="port.https=" --replace_string="port.https=443" --target_file="$install_dir/framework/webapp/config/url.properties"
-	ynh_replace_string --match_string="force.https.host=" --replace_string="force.https.host=$domain" --target_file="$install_dir/framework/webapp/config/url.properties"
-	ynh_replace_string --match_string="port.http=8080" --replace_string="port.http=80" --target_file="$install_dir/framework/webapp/config/url.properties"
-	ynh_replace_string --match_string="force.http.host=" --replace_string="force.http.host=$domain" --target_file="$install_dir/framework/webapp/config/url.properties"
-
-	ynh_replace_string --match_string="host-headers-allowed=.*" --replace_string="host-headers-allowed=$domain" --target_file="$install_dir/framework/security/config/security.properties"
-
-	ynh_replace_string --match_string="8443" --replace_string="$port" --target_file="$install_dir/framework/catalina/ofbiz-component.xml"
-
-	ynh_replace_string --match_string="jdbc:postgresql://127.0.0.1/ofbiz" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="jdbc:postgresql://127.0.0.1/ofbizolap" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}olap" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="jdbc:postgresql://127.0.0.1/ofbiztenant" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}tenant" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="jdbc-username=\"ofbiz\"" --replace_string="jdbc-username=\"$db_user\"" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="jdbc-password=\"ofbiz\"" --replace_string="jdbc-password=\"$db_pwd\"" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localderby\"" --replace_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localpostgres\"" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localderbyolap\"" --replace_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localpostgresolap\"" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-	ynh_replace_string --match_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localderbytenant\"" --replace_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localpostgrestenant\"" --target_file="$install_dir/framework/entity/config/entityengine.xml"
-
-	ynh_replace_string --match_string="security.ldap.enable=false" --replace_string="security.ldap.enable=true" --target_file="$install_dir/framework/security/config/security.properties"
-	ynh_replace_string --match_string="ldap.dn.template=cn=%u,ou=system" --replace_string="ldap.dn.template=uid=%u,ou=users,dc=yunohost,dc=org" --target_file="$install_dir/framework/security/config/jndiLdap.properties"
-
-	cp -f ../conf/build.gradle "$install_dir/build.gradle"
-fi
-
-#=================================================
-# SETUP SYSTEMD
-#=================================================
-ynh_script_progression --message="Upgrading systemd configuration..."
-
 # Create a dedicated systemd config
 ynh_add_systemd_config
+yunohost service add "$app" --log="/var/log/$app/$app.log"
 
-yunohost service add $app --log="/var/log/$app/$app.log"
+ynh_use_logrotate --non-append
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..."
+ynh_script_progression --message="Starting $app's systemd service..." --weight=1
 
-mkdir -p /var/log/$app
-chown -R $app:$app "/var/log/$app"
-
-# Start a systemd service
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log" --line_match="is started and ready"
+ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log" --line_match="is started and ready"
 
 #=================================================
 # END OF SCRIPT
