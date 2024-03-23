@@ -1,11 +1,11 @@
 <!--
-Nota bene: ce README est automatiquement généré par https://github.com/YunoHost/apps/tree/master/tools/readme_generator
+Nota bene : ce README est automatiquement généré par https://github.com/YunoHost/apps/tree/master/tools/readme_generator
 Il ne doit pas être modifié à la main.
 -->
 
 # OFBiz pour YunoHost
 
-[![Niveau d'intégration ](https://dash.yunohost.org/integration/ofbiz.svg)](https://dash.yunohost.org/appci/app/ofbiz) ![Status du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Statut demaintenance](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
+[![Niveau d'intégration](https://dash.yunohost.org/integration/ofbiz.svg)](https://dash.yunohost.org/appci/app/ofbiz) ![Status du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Statut demaintenance](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
 
 [![Installer OFBiz avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ofbiz)
 
@@ -21,8 +21,8 @@ Apache OFBiz is an open source product for the automation of enterprise processe
 **Version incluse :** 18.12.12~ynh1
 ## Documentations et ressources
 
-- Site officiel de l’app : <https://ofbiz.apache.org>
-- Documentation officielle utilisateur : <https://cwiki.apache.org/confluence/display/OFBIZ/Documentation>
+- Site officiel de l’app : <https://ofbiz.apache.org>
+- Documentation officielle utilisateur : <https://cwiki.apache.org/confluence/display/OFBIZ/Documentation>
 - Dépôt de code officiel de l’app : <https://github.com/apache/ofbiz-framework>
 - YunoHost Store : <https://apps.yunohost.org/app/ofbiz>
 - Signaler un bug : <https://github.com/YunoHost-Apps/ofbiz_ynh/issues>
@@ -40,4 +40,4 @@ or
 sudo yunohost app upgrade ofbiz -u https://github.com/YunoHost-Apps/ofbiz_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
