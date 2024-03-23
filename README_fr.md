@@ -18,7 +18,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 
 Apache OFBiz is an open source product for the automation of enterprise processes. It includes framework components and business applications for ERP, CRM, E-Business/E-Commerce, Supply Chain Management and Manufacturing Resource Planning. OFBiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions. 
 
-**Version incluse :** 18.12.07~ynh2
+**Version incluse :** 18.12.12~ynh1
 ## Documentations et ressources
 
 - Site officiel de l’app : <https://ofbiz.apache.org>
