@@ -34,7 +34,7 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.10.zip"
+    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.12.zip"
     sha256 = "8fece2b0febf54764f707c61c3ec601e7521c6d3cf85d9f414b9ff07d18e9a50"
 
     autoupdate.strategy = "latest_github_tag"
