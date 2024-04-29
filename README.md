@@ -20,6 +20,7 @@ Apache OFBiz is an open source product for the automation of enterprise processe
 
 
 **Shipped version:** 18.12.12~ynh1
+
 ## Documentation and resources
 
 - Official app website: <https://ofbiz.apache.org>
