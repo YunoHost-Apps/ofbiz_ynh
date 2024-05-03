@@ -54,9 +54,9 @@ ram.runtime = "50M"
     packages = [ "postgresql"]
     packages_from_raw_bash = """
     if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
-        echo "openjdk-11-jre";
+        echo "openjdk-11-jdk";
     elif [[ $YNH_DEBIAN_VERSION == "bookworm" ]]; then
-        echo "openjdk-17-jre";
+        echo "openjdk-17-jdk";
     fi
     """
     
