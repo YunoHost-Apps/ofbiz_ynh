@@ -34,8 +34,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/apache/ofbiz-framework/archive/refs/tags/release18.12.14.tar.gz"
-    sha256 = "406d4c1e055f05fcadd87172a00df1f85bc44183399e2f54e786caf7ae3f8cac"
+    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.14.zip"
+    sha256 = "93fb6159432ffba2dc60420f1d9be36131708f19500ee0c3cc784a5a5499381e"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
