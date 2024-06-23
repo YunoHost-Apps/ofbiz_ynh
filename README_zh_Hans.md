@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 OFBiz
+# YunoHost 上的 OFBiz
 
 [![集成程度](https://dash.yunohost.org/integration/ofbiz.svg)](https://dash.yunohost.org/appci/app/ofbiz) ![工作状态](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
 
