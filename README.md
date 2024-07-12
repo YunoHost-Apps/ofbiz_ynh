@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # OFBiz for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/ofbiz.svg)](https://dash.yunohost.org/appci/app/ofbiz) ![Working status](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
+[![Integration level](https://dash.yunohost.org/integration/ofbiz.svg)](https://ci-apps.yunohost.org/ci/apps/ofbiz/) ![Working status](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
 
 [![Install OFBiz with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ofbiz)
 
@@ -19,7 +19,7 @@ It shall NOT be edited by hand.
 Apache OFBiz is an open source product for the automation of enterprise processes. It includes framework components and business applications for ERP, CRM, E-Business/E-Commerce, Supply Chain Management and Manufacturing Resource Planning. OFBiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions. 
 
 
-**Shipped version:** 18.12.07~ynh2
+**Shipped version:** 18.12.15~ynh1
 ## Documentation and resources
 
 - Official app website: <https://ofbiz.apache.org>
