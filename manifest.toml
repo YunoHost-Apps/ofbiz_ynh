@@ -4,9 +4,10 @@ packaging_format = 2
 
 id = "ofbiz"
 name = "OFBiz"
-description.en = "Apache-OFBiz ERP"
+description.en = "Application suite for business used to automate many business procedures"
+description.fr = "Suite d'applications pour l'entreprise utilisé pour automatiser de nombreuses procédures d'entreprise"
 
-version = "18.12.15~ynh1"
+version = "18.12.14~ynh1"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -34,8 +35,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/apache/ofbiz-framework/archive/refs/tags/release18.12.15.tar.gz"
-    sha256 = "cad83173fb44632f3bf6abaf6ba78bc8f4eb3b4ab7303bd4c5b76a6d4a4ab45b"
+    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.14.zip"
+    sha256 = "93fb6159432ffba2dc60420f1d9be36131708f19500ee0c3cc784a5a5499381e"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
