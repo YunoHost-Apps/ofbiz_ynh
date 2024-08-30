@@ -6,7 +6,7 @@ id = "ofbiz"
 name = "OFBiz"
 description.en = "Apache-OFBiz ERP"
 
-version = "18.12.07~ynh2"
+version = "18.12.16~ynh1"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -34,8 +34,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.07.zip"
-    sha256 = "b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de"
+    url = "https://github.com/apache/ofbiz-framework/archive/refs/tags/release18.12.16.tar.gz"
+    sha256 = "fa5573c6e5157d87e964755dac0effaab1ef980f7d046bb9d988ff09388c621a"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
