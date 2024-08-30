@@ -10,23 +10,23 @@ source /usr/share/yunohost/helpers
 #=================================================
 # REMOVE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Removing system configurations related to $app..." --weight=1
+ynh_script_progression "Removing system configurations related to $app..."
 
-if ynh_exec_warn_less yunohost service status "$app" >/dev/null; then
-    ynh_script_progression --message="Removing $app service integration..."
+if ynh_hide_warnings yunohost service status "$app" >/dev/null; then
+    ynh_script_progression "Removing $app service integration..."
     yunohost service remove "$app"
 fi
 
 # Remove the dedicated systemd config
-ynh_remove_systemd_config
+ynh_config_remove_systemd
 
 # Remove the dedicated NGINX config
-ynh_remove_nginx_config
+ynh_config_remove_nginx
 
-ynh_remove_logrotate
+ynh_config_remove_logrotate
 
 # Remove the log files
-ynh_secure_remove --file="/var/log/$app"
+#REMOVEME? (Apps should not remove their log dir during remove ... this should only happen if --purge is used, and be handled by the core...) ynh_safe_rm "/var/log/$app"
 
 # Remove additional databases
 ynh_psql_drop_db "${db_name}tenant"
@@ -36,4 +36,4 @@ ynh_psql_drop_db "${db_name}olap"
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Removal of $app completed"
+ynh_script_progression "Removal of $app completed"
