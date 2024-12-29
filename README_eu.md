@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # OFBiz YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/ofbiz.svg)](https://ci-apps.yunohost.org/ci/apps/ofbiz/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/ofbiz)](https://ci-apps.yunohost.org/ci/apps/ofbiz/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/ofbiz)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/ofbiz)
 
 [![Instalatu OFBiz YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ofbiz)
 

@@ -5,7 +5,9 @@ Hij mag NIET handmatig aangepast worden.
 
 # OFBiz voor Yunohost
 
-[![Integratieniveau](https://dash.yunohost.org/integration/ofbiz.svg)](https://ci-apps.yunohost.org/ci/apps/ofbiz/) ![Mate van functioneren](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Onderhoudsstatus](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
+[![Integratieniveau](https://apps.yunohost.org/badge/integration/ofbiz)](https://ci-apps.yunohost.org/ci/apps/ofbiz/)
+![Mate van functioneren](https://apps.yunohost.org/badge/state/ofbiz)
+![Onderhoudsstatus](https://apps.yunohost.org/badge/maintained/ofbiz)
 
 [![OFBiz met Yunohost installeren](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ofbiz)
 

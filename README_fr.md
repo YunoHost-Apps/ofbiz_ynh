@@ -5,7 +5,9 @@ Il NE doit PAS être modifié à la main.
 
 # OFBiz pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/ofbiz.svg)](https://ci-apps.yunohost.org/ci/apps/ofbiz/) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ofbiz.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/ofbiz.maintain.svg)
+[![Niveau d’intégration](https://apps.yunohost.org/badge/integration/ofbiz)](https://ci-apps.yunohost.org/ci/apps/ofbiz/)
+![Statut du fonctionnement](https://apps.yunohost.org/badge/state/ofbiz)
+![Statut de maintenance](https://apps.yunohost.org/badge/maintained/ofbiz)
 
 [![Installer OFBiz avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ofbiz)
 
