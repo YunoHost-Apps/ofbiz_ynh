@@ -16,7 +16,7 @@ _ci_fix_nginx() {
 }
 
 _fixup_config() {
-    ynh_add_config --template="url.properties" --destination="$install_dir/build/build/framework/webapp/config/url.properties"
+    ynh_add_config --template="url.properties" --destination="$install_dir/build/framework/webapp/config/url.properties"
 
     ynh_add_config --template="security.properties" --destination="$install_dir/build/framework/security/config/security.properties"
 
