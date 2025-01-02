@@ -28,11 +28,13 @@ ynh_setup_source --dest_dir="$install_dir/build"
 ynh_setup_source --source_id="pgjdbc" --dest_dir="$install_dir/build"
 
 env_string=" "
+jh_string=" "
 
 if [ $(lsb_release --codename --short) == 'bookworm' ]
 then
     ynh_setup_source --dest_dir="$install_dir/jdk" --source_id="jdk"
     env_string="env PATH=$install_dir/jdk/bin:$PATH JAVA_HOME=$install_dir/jdk"
+    jh_string="Environment=JAVA_HOME=\"$install_dir/jdk\""
 fi
 
 chown -R "$app:www-data" "$install_dir/build"
@@ -57,7 +59,7 @@ pushd "$install_dir/build"
     ynh_exec_as "$app" $env_string ./gradlew distTar
 popd
 
-tar xf $install_dir/build/distributions/ofbiz.tar -C $install_dir
+tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
 
 #=================================================
 # SYSTEM CONFIGURATION
