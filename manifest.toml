@@ -40,6 +40,28 @@ ram.runtime = "50M"
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
 
+    [resources.sources.jdk]
+    amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_x64_linux_hotspot_11.0.25_9.tar.gz"
+    amd64.sha256 = "191baa2e052627614022171400a917d28f0987dc54da48aaf07b06f552bb9884"
+    arm64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.25_9.tar.gz"
+    arm64.sha256 = "f2087cc3abdd509b74facf8e43e81e36244d14c70dec080b8f3a662695417ca7"
+    armhf.url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_arm_linux_hotspot_11.0.25_9.tar.gz"
+    armhf.sha256="6bdd7da08c9f8fedded8da0411b6566c16cb9a904d164b68a0b7f11c8376673a"
+
+    autoupdate.strategy = "latest_github_release"
+    autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
+    autoupdate.upstream = "https://github.com/adoptium/temurin11-binaries"
+    autoupdate.asset.amd64 = "OpenJDK.*-jdk_x64_linux_hotspot_.*\\.tar\\.gz$"
+    autoupdate.asset.arm64 = "OpenJDK.*-jdk_aarch64_linux_hotspot_.*\\.tar\\.gz$"
+    autoupdate.asset.armhf = "OpenJDK.*-jdk_arm_linux_hotspot_.*\\.tar\\.gz$"
+    
+    [resources.sources.pgjdbc]
+    url = "https://github.com/pgjdbc/pgjdbc/releases/download/REL42.7.4/postgresql-42.7.4.jar"
+    sha256 = "188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
+
+    autoupdate.strategy = "latest_github_release"
+    autoupdate.version_regex = "^REL(.*)$"
+
     [resources.system_user]
 
     [resources.install_dir]
@@ -54,9 +76,7 @@ ram.runtime = "50M"
     packages = [ "postgresql"]
     packages_from_raw_bash = """
     if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
-        echo "openjdk-11-jre";
-    elif [[ $YNH_DEBIAN_VERSION == "bookworm" ]]; then
-        echo "openjdk-17-jre";
+        echo "openjdk-11-jdk-headless";
     fi
     """
     
