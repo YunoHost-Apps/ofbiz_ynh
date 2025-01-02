@@ -32,7 +32,7 @@ $env_string=" "
 if [ $(lsb_release --codename --short) == 'bookworm' ]
 then
     ynh_setup_source --dest_dir="$install_dir/jdk" --source_id="jdk"
-    $env_string="env PATH=$install_dir/jdk/bin:$PATH JAVA_HOME=$install_dir/jdk"
+    env_string="env PATH=$install_dir/jdk/bin:$PATH JAVA_HOME=$install_dir/jdk"
 fi
 
 chown -R "$app:www-data" "$install_dir/build"
