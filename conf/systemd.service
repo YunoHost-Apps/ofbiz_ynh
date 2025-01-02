@@ -10,7 +10,7 @@ WorkingDirectory=__INSTALL_DIR__/ofbiz
 ExecStart=__INSTALL_DIR__/ofbiz/bin/ofbiz
 StandardOutput=append:/var/log/__APP__/__APP__.log
 StandardError=inherit
-Environment=JAVA_HOME="__INSTALL_DIR__/jdk"
+__JH_STRING__
 
 [Install]# Sandboxing options to harden security
 # Depending on specificities of your service/app, you may need to tweak these
