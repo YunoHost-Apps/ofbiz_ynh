@@ -59,7 +59,7 @@ pushd "$install_dir/build"
     ynh_exec_as "$app" $env_string ./gradlew distTar
 popd
 
-tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
+ynh_exec_as "$app" tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
 
 #=================================================
 # SYSTEM CONFIGURATION
