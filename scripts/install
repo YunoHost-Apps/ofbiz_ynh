@@ -27,7 +27,7 @@ ynh_setup_source --dest_dir="$install_dir/build"
 
 ynh_setup_source --source_id="pgjdbc" --dest_dir="$install_dir/build"
 
-$env_string=" "
+env_string=" "
 
 if [ $(lsb_release --codename --short) == 'bookworm' ]
 then
