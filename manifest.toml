@@ -58,6 +58,9 @@ ram.runtime = "50M"
     [resources.sources.pgjdbc]
     url = "https://github.com/pgjdbc/pgjdbc/releases/download/REL42.7.4/postgresql-42.7.4.jar"
     sha256 = "188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
+    format="whatever"
+    extract = false
+    rename = "postgresql-42.7.4.jar"
 
     autoupdate.strategy = "latest_github_release"
     autoupdate.version_regex = "^REL(.*)$"
