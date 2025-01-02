@@ -12,7 +12,6 @@ StandardOutput=append:/var/log/__APP__/__APP__.log
 StandardError=inherit
 __JH_STRING__
 
-[Install]
 # Sandboxing options to harden security
 # Depending on specificities of your service/app, you may need to tweak these
 # .. but this should be a good baseline
