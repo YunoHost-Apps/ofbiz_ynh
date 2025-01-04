@@ -1,0 +1,94 @@
+From 0ae52a0ceee0522de63c4e0cc55f387893555cda Mon Sep 17 00:00:00 2001
+From: Mateusz <2871798+orhtej2@users.noreply.github.com>
+Date: Sat, 4 Jan 2025 17:06:01 +0100
+Subject: [PATCH] Support proxying
+
+---
+ .../catalina/container/CatalinaContainer.java     |  9 +++++++++
+ .../org/apache/ofbiz/webapp/OfbizUrlBuilder.java  | 15 +++++++++------
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java b/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java
+index df92fed..65aa968 100644
+--- a/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java
++++ b/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java
+@@ -59,6 +59,7 @@ import org.apache.catalina.tribes.transport.ReplicationTransmitter;
+ import org.apache.catalina.tribes.transport.nio.NioReceiver;
+ import org.apache.catalina.util.ServerInfo;
+ import org.apache.catalina.valves.AccessLogValve;
++import org.apache.catalina.valves.RemoteIpValve;
+ import org.apache.catalina.webresources.StandardRoot;
+ import org.apache.ofbiz.base.component.ComponentConfig;
+ import org.apache.ofbiz.base.concurrent.ExecutionPool;
+@@ -399,6 +400,14 @@ public class CatalinaContainer implements Container {
+             engineValves.add(accessLogValve);
+         }
+ 
++        RemoteIpValve remoteIpValve = new RemoteIpValve();
++        remoteIpValve.setHostHeader("X-Forwarded-Host");
++        remoteIpValve.setPortHeader("X-Forwarded-Port");
++        remoteIpValve.setChangeLocalName(true);
++        remoteIpValve.setChangeLocalPort(true);
++
++        engineValves.add(remoteIpValve);
++
+         return engineValves;
+     }
+ 
+diff --git a/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java b/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java
+index dac0279..d5b6386 100644
+--- a/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java
++++ b/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java
+@@ -58,7 +58,7 @@ public final class OfbizUrlBuilder {
+             URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
+             ControllerConfig config = ConfigXMLReader.getControllerConfig(url);
+             String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
+-            builder = new OfbizUrlBuilder(config, webSiteProps, servletPath);
++            builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, request);
+             request.setAttribute("_OFBIZ_URL_BUILDER_", builder);
+         }
+         return builder;
+@@ -96,17 +96,19 @@ public final class OfbizUrlBuilder {
+         if (webSiteProps == null) {
+             webSiteProps = WebSiteProperties.defaults(delegator);
+         }
+-        return new OfbizUrlBuilder(config, webSiteProps, servletPath);
++        return new OfbizUrlBuilder(config, webSiteProps, servletPath, null);
+     }
+ 
+     private final ControllerConfig config;
+     private final WebSiteProperties webSiteProps;
+     private final String servletPath;
++    private final HttpServletRequest request;
+ 
+-    private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath) {
++    private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, HttpServletRequest request) {
+         this.config = config;
+         this.webSiteProps = webSiteProps;
+         this.servletPath = servletPath;
++        this.request = request;
+     }
+ 
+     /**
+@@ -154,14 +156,15 @@ public final class OfbizUrlBuilder {
+         }
+         makeSecure = webSiteProps.getEnableHttps() & makeSecure;
+         if (makeSecure) {
+-            String server = webSiteProps.getHttpsHost();
++            String server = request != null ? request.getServerName() : webSiteProps.getHttpsHost();
+             if (server.isEmpty()) {
+                 server = "localhost";
+             }
+             buffer.append("https://");
+             buffer.append(server);
+-            if (!webSiteProps.getHttpsPort().isEmpty()) {
+-                buffer.append(":").append(webSiteProps.getHttpsPort());
++            String port = request != null ? String.valueOf(request.getServerPort()) : webSiteProps.getHttpsPort();
++            if (!port.isEmpty()) {
++                buffer.append(":").append(port);
+             } else if ("localhost".equals(server)) {
+                 buffer.append(":").append("8443"); // We suppose that when localhost is used the default secure port is 8443
+             }
+-- 
+2.45.0.windows.1
+
