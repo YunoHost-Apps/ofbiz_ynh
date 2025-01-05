@@ -58,7 +58,7 @@ pushd "$install_dir/build"
     ynh_secure_remove --file="$install_dir/build/framework/entity/lib"
     ynh_setup_source --source_id="pgjdbc" --dest_dir="$install_dir/build/framework/entity/lib"
     chown -R $app:$app "$install_dir/build/framework/entity/lib"
-    ynh_exec_as "$app" $env_string ./gradlew --no-daemon distTar 2>&1
+    ynh_exec_as "$app" $env_string ./gradlew --no-daemon "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
 popd
 
 ynh_exec_as "$app" tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir

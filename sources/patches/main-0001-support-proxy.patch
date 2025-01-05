@@ -1,45 +1,18 @@
-From 0ae52a0ceee0522de63c4e0cc55f387893555cda Mon Sep 17 00:00:00 2001
+From ea95b6261a9b80b28628b40e26f59b557cde4843 Mon Sep 17 00:00:00 2001
 From: Mateusz <2871798+orhtej2@users.noreply.github.com>
-Date: Sat, 4 Jan 2025 17:06:01 +0100
+Date: Sun, 5 Jan 2025 17:41:25 +0100
 Subject: [PATCH] Support proxying
 
 ---
- .../catalina/container/CatalinaContainer.java     |  9 +++++++++
- .../org/apache/ofbiz/webapp/OfbizUrlBuilder.java  | 15 +++++++++------
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ .../apache/ofbiz/webapp/OfbizUrlBuilder.java  | 32 ++++++++++++-------
+ .../ofbiz/webapp/ftl/OfbizUrlTransform.java   |  2 +-
+ 2 files changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java b/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java
-index df92fed..65aa968 100644
---- a/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java
-+++ b/framework/catalina/src/main/java/org/apache/ofbiz/catalina/container/CatalinaContainer.java
-@@ -59,6 +59,7 @@ import org.apache.catalina.tribes.transport.ReplicationTransmitter;
- import org.apache.catalina.tribes.transport.nio.NioReceiver;
- import org.apache.catalina.util.ServerInfo;
- import org.apache.catalina.valves.AccessLogValve;
-+import org.apache.catalina.valves.RemoteIpValve;
- import org.apache.catalina.webresources.StandardRoot;
- import org.apache.ofbiz.base.component.ComponentConfig;
- import org.apache.ofbiz.base.concurrent.ExecutionPool;
-@@ -399,6 +400,14 @@ public class CatalinaContainer implements Container {
-             engineValves.add(accessLogValve);
-         }
- 
-+        RemoteIpValve remoteIpValve = new RemoteIpValve();
-+        remoteIpValve.setHostHeader("X-Forwarded-Host");
-+        remoteIpValve.setPortHeader("X-Forwarded-Port");
-+        remoteIpValve.setChangeLocalName(true);
-+        remoteIpValve.setChangeLocalPort(true);
-+
-+        engineValves.add(remoteIpValve);
-+
-         return engineValves;
-     }
- 
 diff --git a/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java b/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java
-index dac0279..d5b6386 100644
+index dac0279..32a8dbe 100644
 --- a/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java
 +++ b/framework/webapp/src/main/java/org/apache/ofbiz/webapp/OfbizUrlBuilder.java
-@@ -58,7 +58,7 @@ public final class OfbizUrlBuilder {
+@@ -58,12 +58,16 @@ public final class OfbizUrlBuilder {
              URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
              ControllerConfig config = ConfigXMLReader.getControllerConfig(url);
              String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
@@ -48,7 +21,25 @@ index dac0279..d5b6386 100644
              request.setAttribute("_OFBIZ_URL_BUILDER_", builder);
          }
          return builder;
-@@ -96,17 +96,19 @@ public final class OfbizUrlBuilder {
+     }
+ 
++    public static OfbizUrlBuilder from(WebappInfo webAppInfo, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
++        return from(webAppInfo, delegator, null);
++    }
++
+     /**
+      * Returns an <code>OfbizUrlBuilder</code> instance. Use this method when you
+      * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
+@@ -77,7 +81,7 @@ public final class OfbizUrlBuilder {
+      * @throws SAXException
+      * @throws GenericEntityException
+      */
+-    public static OfbizUrlBuilder from(WebappInfo webAppInfo, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
++    public static OfbizUrlBuilder from(WebappInfo webAppInfo, Delegator delegator, HttpServletRequest request) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+         WebSiteProperties webSiteProps = null;
+         ControllerConfig config = null;
+         String servletPath = null;
+@@ -96,17 +100,19 @@ public final class OfbizUrlBuilder {
          if (webSiteProps == null) {
              webSiteProps = WebSiteProperties.defaults(delegator);
          }
@@ -70,7 +61,7 @@ index dac0279..d5b6386 100644
      }
  
      /**
-@@ -154,14 +156,15 @@ public final class OfbizUrlBuilder {
+@@ -154,26 +160,30 @@ public final class OfbizUrlBuilder {
          }
          makeSecure = webSiteProps.getEnableHttps() & makeSecure;
          if (makeSecure) {
@@ -89,6 +80,38 @@ index dac0279..d5b6386 100644
              } else if ("localhost".equals(server)) {
                  buffer.append(":").append("8443"); // We suppose that when localhost is used the default secure port is 8443
              }
+         } else {
+-            String server = webSiteProps.getHttpHost();
++            String server = request != null ? request.getServerName() : webSiteProps.getHttpHost();
+             if (server.isEmpty()) {
+                 server = "localhost";
+             }
+-            buffer.append("http://");
++            String scheme = request != null ? request.getScheme() : "http";
++            buffer.append(scheme);
++            buffer.append("://");
+             buffer.append(server);
+-            if (!webSiteProps.getHttpPort().isEmpty()) {
+-                buffer.append(":").append(webSiteProps.getHttpPort());
++            String port = request != null ? String.valueOf(request.getServerPort()) : webSiteProps.getHttpPort();
++            if (!port.isEmpty()) {
++                buffer.append(":").append(port);
+             }
+         }
+         return makeSecure;
+diff --git a/framework/webapp/src/main/java/org/apache/ofbiz/webapp/ftl/OfbizUrlTransform.java b/framework/webapp/src/main/java/org/apache/ofbiz/webapp/ftl/OfbizUrlTransform.java
+index e64810a..42cb834 100644
+--- a/framework/webapp/src/main/java/org/apache/ofbiz/webapp/ftl/OfbizUrlTransform.java
++++ b/framework/webapp/src/main/java/org/apache/ofbiz/webapp/ftl/OfbizUrlTransform.java
+@@ -132,7 +132,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
+                         }
+                         WebappInfo webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+                         StringBuilder newUrlBuff = new StringBuilder(250);
+-                        OfbizUrlBuilder builder = OfbizUrlBuilder.from(webAppInfo, delegator);
++                        OfbizUrlBuilder builder = OfbizUrlBuilder.from(webAppInfo, delegator, request);
+                         builder.buildFullUrl(newUrlBuff, buf.toString(), secure);
+                         String newUrl = newUrlBuff.toString();
+                         if (encode) {
 -- 
 2.45.0.windows.1
 
