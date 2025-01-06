@@ -6,7 +6,7 @@ id = "ofbiz"
 name = "OFBiz"
 description.en = "Apache-OFBiz ERP"
 
-version = "18.12.07~ynh2"
+version = "18.12.17~ynh1"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -32,13 +32,39 @@ ram.runtime = "50M"
     [install.domain]
     type = "domain"
 
+    [install.init_main_permission]
+    type = "group"
+    default = "visitors"
+
 [resources]
     [resources.sources.main]
-    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.07.zip"
-    sha256 = "b3f7b23167cae3ccc96c3d088e42c8df600485b8b7f88ac63b834a82e19fa5de"
+    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.17.zip"
+    sha256 = "04cd721724f29dbbddc9de766834d13b0e766d7b8a013c91712bd91342dc2d74"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
+
+    [resources.sources.jdk]
+    amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_x64_linux_hotspot_11.0.25_9.tar.gz"
+    amd64.sha256 = "191baa2e052627614022171400a917d28f0987dc54da48aaf07b06f552bb9884"
+    arm64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.25_9.tar.gz"
+    arm64.sha256 = "f2087cc3abdd509b74facf8e43e81e36244d14c70dec080b8f3a662695417ca7"
+    armhf.url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_arm_linux_hotspot_11.0.25_9.tar.gz"
+    armhf.sha256="6bdd7da08c9f8fedded8da0411b6566c16cb9a904d164b68a0b7f11c8376673a"
+
+    autoupdate.strategy = "latest_github_release"
+    autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
+    autoupdate.upstream = "https://github.com/adoptium/temurin11-binaries"
+    autoupdate.asset.amd64 = "OpenJDK.*-jdk_x64_linux_hotspot_.*\\.tar\\.gz$"
+    autoupdate.asset.arm64 = "OpenJDK.*-jdk_aarch64_linux_hotspot_.*\\.tar\\.gz$"
+    autoupdate.asset.armhf = "OpenJDK.*-jdk_arm_linux_hotspot_.*\\.tar\\.gz$"
+    
+    [resources.sources.pgjdbc]
+    url = "https://github.com/pgjdbc/pgjdbc/releases/download/REL42.7.4/postgresql-42.7.4.jar"
+    sha256 = "188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
+    format="whatever"
+    extract = false
+    rename = "postgresql-42.7.4.jar"
 
     [resources.system_user]
 
@@ -48,15 +74,13 @@ ram.runtime = "50M"
 
     [resources.permissions]
     main.url = "/"
-    main.allowed = "admins"
+    main.auth_header = false
 
     [resources.apt]
     packages = [ "postgresql"]
     packages_from_raw_bash = """
     if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
-        echo "openjdk-11-jre";
-    elif [[ $YNH_DEBIAN_VERSION == "bookworm" ]]; then
-        echo "openjdk-17-jre";
+        echo "openjdk-11-jdk-headless";
     fi
     """
     

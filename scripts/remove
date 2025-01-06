@@ -14,6 +14,7 @@ ynh_script_progression --message="Removing system configurations related to $app
 
 if ynh_exec_warn_less yunohost service status "$app" >/dev/null; then
     ynh_script_progression --message="Removing $app service integration..."
+    ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$app/$app.log" --line_match="Stopped container component-container"
     yunohost service remove "$app"
 fi
 
@@ -26,7 +27,6 @@ ynh_remove_nginx_config
 ynh_remove_logrotate
 
 # Remove the log files
-ynh_secure_remove --file="/var/log/$app"
 
 # Remove additional databases
 ynh_psql_drop_db "${db_name}tenant"

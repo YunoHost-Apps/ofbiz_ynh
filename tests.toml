@@ -3,3 +3,4 @@
 test_format = 1.0
 
 [default]
+    test_upgrade_from.4186a733.name = "Upgrade from 18.12.07~ynh2"
