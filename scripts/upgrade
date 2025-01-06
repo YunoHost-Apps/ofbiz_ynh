@@ -12,7 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Stopping $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="stop" --log_path="systemd" --line_match="Stopped OFBiz Service"
+ynh_systemd_action --service_name="$app" --action="stop" --log_path="systemd" --line_match="Stopped container component-container"
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
@@ -24,55 +24,57 @@ if [ -n "${admin:-}" ]; then
     ynh_app_setting_delete --app="$app" --key=admin
 fi
 
+if $(ynh_compare_current_package_version --comparison le --version "18.12.17~ynh1")
+then
+    # Purge old root directory's contents
+    ynh_script_progression --message="Moving old files..."
+    mkdir /tmp/ofbiz
+    chmod -R o-rwx /tmp/ofbiz
+    chown -R $app:www-data /tmp/ofbiz
+    mv -f $install_dir/* $install_dir/.[!.]* /tmp/ofbiz
+    mv /tmp/ofbiz $install_dir/
+fi
+
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Upgrading source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$install_dir" --full_replace=1
+ynh_setup_source --dest_dir="$install_dir/build"
 
-chmod -R o-rwx "$install_dir"
-chown -R "$app:www-data" "$install_dir"
+env_string=" "
+jh_string=" "
+
+if [ $(lsb_release --codename --short) == 'bookworm' ]
+then
+    ynh_setup_source --dest_dir="$install_dir/jdk" --source_id="jdk" --full_replace=1
+    env_string="env PATH=$install_dir/jdk/bin:$PATH JAVA_HOME=$install_dir/jdk"
+    jh_string="Environment=JAVA_HOME=\"$install_dir/jdk\""
+fi
+
+chown -R "$app:www-data" "$install_dir/build"
+
 
 #=================================================
 # BUILD APP
 #=================================================
 ynh_script_progression --message="Building app..."
 
-# ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="port.https=" --replace_string="port.https=443"
-# ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="force.https.host=" --replace_string="force.https.host=$domain"
-# ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="port.http=8080" --replace_string="port.http=80"
-# ynh_replace_string --target_file="$install_dir/framework/webapp/config/url.properties" --match_string="force.http.host=" --replace_string="force.http.host=$domain"
+_fixup_config
 
-ynh_add_config --template="url.properties" --destination="$install_dir/framework/webapp/config/url.properties"
-
-ynh_add_config --template="security.properties" --destination="$install_dir/framework/security/config/security.properties"
-
-ynh_replace_string --target_file="$install_dir/framework/catalina/ofbiz-component.xml" --match_string="8443" --replace_string="$port"
-
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc:postgresql://127.0.0.1/ofbiz" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}"
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc:postgresql://127.0.0.1/ofbizolap" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}olap"
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc:postgresql://127.0.0.1/ofbiztenant" --replace_string="jdbc:postgresql://127.0.0.1:5432/${db_name}tenant"
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc-username=\"ofbiz\"" --replace_string="jdbc-username=\"$db_user\""
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" --match_string="jdbc-password=\"ofbiz\"" --replace_string="jdbc-password=\"$db_pwd\""
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" \
-    --match_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localderby\"" --replace_string="group-map group-name=\"org.apache.ofbiz\" datasource-name=\"localpostgres\""
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" \
-    --match_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localderbyolap\"" --replace_string="group-map group-name=\"org.apache.ofbiz.olap\" datasource-name=\"localpostgresolap\""
-ynh_replace_string --target_file="$install_dir/framework/entity/config/entityengine.xml" \
-    --match_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localderbytenant\"" --replace_string="group-map group-name=\"org.apache.ofbiz.tenant\" datasource-name=\"localpostgrestenant\""
-
-ynh_replace_string --target_file="$install_dir/framework/security/config/security.properties" --match_string="host-headers-allowed=.*" --replace_string="host-headers-allowed=$domain"
-ynh_replace_string --target_file="$install_dir/framework/security/config/security.properties" --match_string="security.ldap.enable=false" --replace_string="security.ldap.enable=true"
-ynh_replace_string --target_file="$install_dir/framework/security/config/jndiLdap.properties" --match_string="ldap.dn.template=cn=%u,ou=system" --replace_string="ldap.dn.template=uid=%u,ou=users,dc=yunohost,dc=org"
-
-ynh_add_config --template="build.gradle" --destination="$install_dir/build.gradle"
-
-pushd "$install_dir"
-    ynh_exec_as "$app" ./gradle/init-gradle-wrapper.sh
-    ynh_exec_as "$app" ./gradlew cleanAll loadAll 2>&1
+pushd "$install_dir/build"
+    ynh_exec_as "$app" $env_string ./gradle/init-gradle-wrapper.sh
+    ynh_exec_as "$app" $env_string ./gradlew --no-daemon jar 2>&1
+    ynh_secure_remove --file="$install_dir/build/framework/entity/lib"
+    ynh_setup_source --source_id="pgjdbc" --dest_dir="$install_dir/build/framework/entity/lib"
+    chown -R $app:$app "$install_dir/build/framework/entity/lib"
+    ynh_exec_as "$app" $env_string ./gradlew --no-daemon "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
 popd
+
+ynh_exec_as "$app" tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
+ynh_secure_remove --file="$install_dir/build"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS

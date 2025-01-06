@@ -12,17 +12,6 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Setting up source files..."
 
-#if $(ynh_compare_current_package_version --comparison le --version "18.12.17~ynh1")
-#then
-	# Purge old root directory's contents
-	#ynh_script_progression --message="Removing old files..."
-	#mkdir /tmp/ofbiz
-	#chmod -R o-rwx /tmp/ofbiz
-	#chown -R $app:www-data /tmp/ofbiz
-	#mv -f $install_dir/* $install_dir/.[!.]* /tmp/ofbiz
-	#mv /tmp/ofbiz $install_dir/
-#fi
-
 ynh_setup_source --dest_dir="$install_dir/build"
 
 env_string=" "
@@ -62,6 +51,7 @@ pushd "$install_dir/build"
 popd
 
 ynh_exec_as "$app" tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
+ynh_secure_remove --file="$install_dir/build"
 
 #=================================================
 # SYSTEM CONFIGURATION
