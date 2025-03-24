@@ -21,7 +21,7 @@ EZ editatu eskuz.
 Apache OFBiz is an open source product for the automation of enterprise processes. It includes framework components and business applications for ERP, CRM, E-Business/E-Commerce, Supply Chain Management and Manufacturing Resource Planning. OFBiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions. 
 
 
-**Paketatutako bertsioa:** 18.12.17~ynh2
+**Paketatutako bertsioa:** 24.09.01~ynh1
 ## Dokumentazioa eta baliabideak
 
 - Aplikazioaren webgune ofiziala: <https://ofbiz.apache.org>
@@ -34,7 +34,7 @@ Apache OFBiz is an open source product for the automation of enterprise processe
 
 Bidali `pull request`a [`testing` abarrera](https://github.com/YunoHost-Apps/ofbiz_ynh/tree/testing).
 
-`testing` abarra probatzeko, ondorengoa egin:
+`testing` abarra probatzeko, honakoa egin:
 
 ```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/ofbiz_ynh/tree/testing --debug
