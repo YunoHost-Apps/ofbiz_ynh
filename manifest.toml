@@ -6,7 +6,7 @@ id = "ofbiz"
 name = "OFBiz"
 description.en = "Apache-OFBiz ERP"
 
-version = "18.12.17~ynh2"
+version = "18.12.17~ynh3"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -22,6 +22,7 @@ architectures = "all"
 multi_instance = false
 
 ldap = false
+
 sso = false
 
 disk = "50M"
@@ -70,11 +71,11 @@ ram.runtime = "50M"
 
     [resources.install_dir]
 
-    [resources.ports]
-
     [resources.permissions]
     main.url = "/"
     main.auth_header = false
+
+    [resources.ports]
 
     [resources.apt]
     packages = [ "postgresql"]
