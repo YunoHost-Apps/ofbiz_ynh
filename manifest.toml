@@ -6,7 +6,7 @@ id = "ofbiz"
 name = "OFBiz"
 description.en = "Apache-OFBiz ERP"
 
-version = "18.12.17~ynh1"
+version = "18.12.17~ynh3"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -22,6 +22,7 @@ architectures = "all"
 multi_instance = false
 
 ldap = false
+
 sso = false
 
 disk = "50M"
@@ -45,12 +46,12 @@ ram.runtime = "50M"
     autoupdate.version_regex = "^release(.*)$"
 
     [resources.sources.jdk]
-    amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_x64_linux_hotspot_11.0.25_9.tar.gz"
-    amd64.sha256 = "191baa2e052627614022171400a917d28f0987dc54da48aaf07b06f552bb9884"
-    arm64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.25_9.tar.gz"
-    arm64.sha256 = "f2087cc3abdd509b74facf8e43e81e36244d14c70dec080b8f3a662695417ca7"
-    armhf.url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/OpenJDK11U-jdk_arm_linux_hotspot_11.0.25_9.tar.gz"
-    armhf.sha256="6bdd7da08c9f8fedded8da0411b6566c16cb9a904d164b68a0b7f11c8376673a"
+    amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_x64_linux_hotspot_11.0.26_4.tar.gz"
+    amd64.sha256 = "7def4c5807b38ef1a7bb30a86572a795ca604127cc8d1f5b370abf23618104e6"
+    arm64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.26_4.tar.gz"
+    arm64.sha256 = "e7b3d37c347fe7af2a53711f16da8b9b164748ce4a84e47bb0739c3be7f1c421"
+    armhf.url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_arm_linux_hotspot_11.0.26_4.tar.gz"
+    armhf.sha256="79d574328f6960d40349996ef8c5949581f9e533dc76f134857c4125c78558ff"
 
     autoupdate.strategy = "latest_github_release"
     autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
@@ -70,11 +71,11 @@ ram.runtime = "50M"
 
     [resources.install_dir]
 
-    [resources.ports]
-
     [resources.permissions]
     main.url = "/"
     main.auth_header = false
+
+    [resources.ports]
 
     [resources.apt]
     packages = [ "postgresql"]

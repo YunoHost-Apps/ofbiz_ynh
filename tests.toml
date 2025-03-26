@@ -3,4 +3,18 @@
 test_format = 1.0
 
 [default]
-    test_upgrade_from.4186a733.name = "Upgrade from 18.12.07~ynh2"
+
+    # ------------
+    # Tests to run
+    # ------------
+
+    # -------------------------------
+    # Default args to use for install
+    # -------------------------------
+
+    # -------------------------------
+    # Commits to test upgrade from
+    # -------------------------------
+
+    # test_upgrade_from.4186a733.name = "Upgrade from 18.12.07~ynh2"
+    test_upgrade_from.78f781f96a541b1e604d46d6801c6834bad24d6b.name = "Upgrade from 18.12.17~ynh1"
