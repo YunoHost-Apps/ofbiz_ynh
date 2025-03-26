@@ -6,7 +6,7 @@ id = "ofbiz"
 name = "OFBiz"
 description.en = "Apache-OFBiz ERP"
 
-version = "18.12.17~ynh3"
+version = "18.12.18~ynh1"
 
 maintainers = ["JulienNICOLAS"]
 
@@ -39,11 +39,13 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.17.zip"
-    sha256 = "04cd721724f29dbbddc9de766834d13b0e766d7b8a013c91712bd91342dc2d74"
+    url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.18.zip"
+    sha256 = "372ade302fbf24215176e74b982a8ee7079214d541cdbea068f293d322e25c84"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.version_regex = "^release(.*)$"
+    autoupdate.asset = "^release18(.*).zip$"
+    autoupdate.version_regex = "^release(.*).zip$"
 
     [resources.sources.jdk]
     amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_x64_linux_hotspot_11.0.26_4.tar.gz"
