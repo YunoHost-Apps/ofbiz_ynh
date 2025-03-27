@@ -42,8 +42,6 @@ ram.runtime = "50M"
     url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.18.zip"
     sha256 = "372ade302fbf24215176e74b982a8ee7079214d541cdbea068f293d322e25c84"
 
-    autoupdate.strategy = "latest_github_tag"
-    autoupdate.version_regex = "^release(.*)$"
     autoupdate.asset = "^release18(.*).zip$"
     autoupdate.version_regex = "^release(.*).zip$"
 
