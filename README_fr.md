@@ -21,7 +21,7 @@ Il NE doit PAS être modifié à la main.
 Apache OFBiz is an open source product for the automation of enterprise processes. It includes framework components and business applications for ERP, CRM, E-Business/E-Commerce, Supply Chain Management and Manufacturing Resource Planning. OFBiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions. 
 
 
-**Version incluse :** 18.12.17~ynh3
+**Version incluse :** 18.12.18~ynh1
 ## Documentations et ressources
 
 - Site officiel de l’app : <https://ofbiz.apache.org>
