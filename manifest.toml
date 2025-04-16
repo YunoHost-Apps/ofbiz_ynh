@@ -42,8 +42,9 @@ ram.runtime = "50M"
     url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.18.zip"
     sha256 = "372ade302fbf24215176e74b982a8ee7079214d541cdbea068f293d322e25c84"
 
-    autoupdate.asset = "^release18(.*).zip$"
-    autoupdate.version_regex = "^release(.*).zip$"
+    # Autoupdater needs a strategy defined to be able to work ... and the asset is on a custom site so probably we can't support it here
+    #autoupdate.asset = "^release18(.*).zip$"
+    #autoupdate.version_regex = "^release(.*).zip$"
 
     [resources.sources.jdk]
     amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_x64_linux_hotspot_11.0.26_4.tar.gz"
@@ -63,7 +64,7 @@ ram.runtime = "50M"
     [resources.sources.pgjdbc]
     url = "https://github.com/pgjdbc/pgjdbc/releases/download/REL42.7.4/postgresql-42.7.4.jar"
     sha256 = "188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
-    format="whatever"
+    format = "whatever"
     extract = false
     rename = "postgresql-42.7.4.jar"
 
