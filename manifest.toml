@@ -54,12 +54,13 @@ ram.runtime = "50M"
     armhf.url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_arm_linux_hotspot_11.0.26_4.tar.gz"
     armhf.sha256="79d574328f6960d40349996ef8c5949581f9e533dc76f134857c4125c78558ff"
 
-    autoupdate.strategy = "latest_github_release"
-    autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
-    autoupdate.upstream = "https://github.com/adoptium/temurin11-binaries"
-    autoupdate.asset.amd64 = "OpenJDK.*-jdk_x64_linux_hotspot_.*\\.tar\\.gz$"
-    autoupdate.asset.arm64 = "OpenJDK.*-jdk_aarch64_linux_hotspot_.*\\.tar\\.gz$"
-    autoupdate.asset.armhf = "OpenJDK.*-jdk_arm_linux_hotspot_.*\\.tar\\.gz$"
+    # Auto-updater disabled because recent releases (11.0.27_6) doesn't seem to ship an _arm_ asset
+    #autoupdate.strategy = "latest_github_release"
+    #autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
+    #autoupdate.upstream = "https://github.com/adoptium/temurin11-binaries"
+    #autoupdate.asset.amd64 = "OpenJDK.*-jdk_x64_linux_hotspot_.*\\.tar\\.gz$"
+    #autoupdate.asset.arm64 = "OpenJDK.*-jdk_aarch64_linux_hotspot_.*\\.tar\\.gz$"
+    #autoupdate.asset.armhf = "OpenJDK.*-jdk_arm_linux_hotspot_.*\\.tar\\.gz$"
     
     [resources.sources.pgjdbc]
     url = "https://github.com/pgjdbc/pgjdbc/releases/download/REL42.7.4/postgresql-42.7.4.jar"
