@@ -10,7 +10,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..."
+ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir/build"
 
@@ -29,55 +29,55 @@ chown -R "$app:www-data" "$install_dir/build"
 #=================================================
 # CREATE A POSTGRESQL DATABASE
 #=================================================
-ynh_script_progression --message="Configuring a PostgreSQL database..."
+ynh_script_progression "Configuring a PostgreSQL database..."
 
-ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
-ynh_psql_execute_as_root --sql="CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_db_shell <<< "CREATE DATABASE ${db_name}olap WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
+ynh_psql_db_shell <<< "CREATE DATABASE ${db_name}tenant WITH OWNER ${db_user} TEMPLATE template0 ENCODING 'UTF8';"
 
 #=================================================
 # BUILD APP
 #=================================================
-ynh_script_progression --message="Building app..."
+ynh_script_progression "Building app..."
 
 _fixup_config
 
 pushd "$install_dir/build"
-    ynh_exec_as "$app" $env_string ./gradle/init-gradle-wrapper.sh
-    ynh_exec_as "$app" $env_string ./gradlew --no-daemon jar 2>&1
-    ynh_secure_remove --file="$install_dir/build/framework/entity/lib"
+    ynh_exec_as_app $env_string ./gradle/init-gradle-wrapper.sh
+    ynh_exec_as_app $env_string ./gradlew --no-daemon jar 2>&1
+    ynh_safe_rm "$install_dir/build/framework/entity/lib"
     ynh_setup_source --source_id="pgjdbc" --dest_dir="$install_dir/build/framework/entity/lib"
     chown -R $app:$app "$install_dir/build/framework/entity/lib"
-    ynh_exec_as "$app" $env_string ./gradlew --no-daemon "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
+    ynh_exec_as_app $env_string ./gradlew --no-daemon "ofbiz --load-data readers=seed,seed-initial" loadAdminUserLogin -PuserLoginId=admin 2>&1
 popd
 
-ynh_exec_as "$app" tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
-ynh_secure_remove --file="$install_dir/build"
+ynh_exec_as_app tar xf $install_dir/build/build/distributions/ofbiz.tar -C $install_dir
+ynh_safe_rm "$install_dir/build"
 
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
 # Create a dedicated NGINX config
 _ci_fix_nginx
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 # Create a dedicated systemd config
-ynh_add_systemd_config
+ynh_config_add_systemd
 yunohost service add "$app" --log="/var/log/$app/$app.log"
 
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_config_add_logrotate
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting $app's systemd service..."
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log" --line_match="is started and ready" --timeout=600
+ynh_systemctl --service="$app" --action="start"  --wait_until="is started and ready" --timeout=600
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed"
+ynh_script_progression "Installation of $app completed"
