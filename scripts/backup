@@ -40,9 +40,9 @@ ynh_backup "/var/log/$app/"
 #=================================================
 ynh_print_info "Backing up the PostgreSQL database..."
 
-ynh_psql_dump_db --database="${db_name}" > db.sql
-ynh_psql_dump_db --database="${db_name}olap" > dbolap.sql
-ynh_psql_dump_db --database="${db_name}tenant" > dbtenant.sql
+ynh_psql_dump_db "${db_name}" > db.sql
+ynh_psql_dump_db "${db_name}olap" > dbolap.sql
+ynh_psql_dump_db "${db_name}tenant" > dbtenant.sql
 
 #=================================================
 # END OF SCRIPT
