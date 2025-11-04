@@ -82,12 +82,10 @@ ram.runtime = "50M"
     [resources.ports]
 
     [resources.apt]
-    packages = [ "postgresql"]
-    packages_from_raw_bash = """
-    if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
-        echo "openjdk-11-jdk-headless";
-    fi
-    """
+    packages = [
+    "postgresql"
+    "openjdk-8-jdk-headless\\|openjdk-11-jdk-headless\\|openjdk-17-jdk-headless\\|openjdk-21-jdk-headless",
+    ]
     
     [resources.database]
     type = "postgresql"
