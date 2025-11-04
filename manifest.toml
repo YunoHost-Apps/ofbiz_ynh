@@ -17,7 +17,8 @@ userdoc = "https://cwiki.apache.org/confluence/display/OFBIZ/Documentation"
 code = "https://github.com/apache/ofbiz-framework"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 11.2.18"
+helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
 
@@ -42,8 +43,9 @@ ram.runtime = "50M"
     url = "https://archive.apache.org/dist/ofbiz/apache-ofbiz-18.12.18.zip"
     sha256 = "372ade302fbf24215176e74b982a8ee7079214d541cdbea068f293d322e25c84"
 
-    autoupdate.asset = "^release18(.*).zip$"
-    autoupdate.version_regex = "^release(.*).zip$"
+    # Autoupdater needs a strategy defined to be able to work ... and the asset is on a custom site so probably we can't support it here
+    #autoupdate.asset = "^release18(.*).zip$"
+    #autoupdate.version_regex = "^release(.*).zip$"
 
     [resources.sources.jdk]
     amd64.url = "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_x64_linux_hotspot_11.0.26_4.tar.gz"
@@ -53,23 +55,25 @@ ram.runtime = "50M"
     armhf.url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.26%2B4/OpenJDK11U-jdk_arm_linux_hotspot_11.0.26_4.tar.gz"
     armhf.sha256="79d574328f6960d40349996ef8c5949581f9e533dc76f134857c4125c78558ff"
 
-    autoupdate.strategy = "latest_github_release"
-    autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
-    autoupdate.upstream = "https://github.com/adoptium/temurin11-binaries"
-    autoupdate.asset.amd64 = "OpenJDK.*-jdk_x64_linux_hotspot_.*\\.tar\\.gz$"
-    autoupdate.asset.arm64 = "OpenJDK.*-jdk_aarch64_linux_hotspot_.*\\.tar\\.gz$"
-    autoupdate.asset.armhf = "OpenJDK.*-jdk_arm_linux_hotspot_.*\\.tar\\.gz$"
+    # Auto-updater disabled because recent releases (11.0.27_6) doesn't seem to ship an _arm_ asset
+    #autoupdate.strategy = "latest_github_release"
+    #autoupdate.version_regex = "jdk-(\\d+\\.\\d+\\.\\d+)\\+(.*)"
+    #autoupdate.upstream = "https://github.com/adoptium/temurin11-binaries"
+    #autoupdate.asset.amd64 = "OpenJDK.*-jdk_x64_linux_hotspot_.*\\.tar\\.gz$"
+    #autoupdate.asset.arm64 = "OpenJDK.*-jdk_aarch64_linux_hotspot_.*\\.tar\\.gz$"
+    #autoupdate.asset.armhf = "OpenJDK.*-jdk_arm_linux_hotspot_.*\\.tar\\.gz$"
     
     [resources.sources.pgjdbc]
     url = "https://github.com/pgjdbc/pgjdbc/releases/download/REL42.7.4/postgresql-42.7.4.jar"
     sha256 = "188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
-    format="whatever"
+    format = "whatever"
     extract = false
     rename = "postgresql-42.7.4.jar"
 
     [resources.system_user]
 
     [resources.install_dir]
+    group = "www-data:r-x"
 
     [resources.permissions]
     main.url = "/"
@@ -78,12 +82,10 @@ ram.runtime = "50M"
     [resources.ports]
 
     [resources.apt]
-    packages = [ "postgresql"]
-    packages_from_raw_bash = """
-    if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
-        echo "openjdk-11-jdk-headless";
-    fi
-    """
+    packages = [
+    "postgresql",
+    "openjdk-8-jdk-headless\\|openjdk-11-jdk-headless\\|openjdk-17-jdk-headless\\|openjdk-21-jdk-headless",
+    ]
     
     [resources.database]
     type = "postgresql"
