@@ -17,7 +17,7 @@ userdoc = "https://cwiki.apache.org/confluence/display/OFBIZ/Documentation"
 code = "https://github.com/apache/ofbiz-framework"
 
 [integration]
-yunohost = ">= 11.2.18"
+yunohost = ">= 12.1.38"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
